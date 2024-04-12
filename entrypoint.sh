@@ -48,7 +48,7 @@ if [ -z "${last_tag}" ];then
     echo "Default Last tag: ${last_tag}";
 fi
 
-next_tag="${last_tag%.*}.$((${last_tag##*.}+1)).0"
+next_tag="${last_tag%.*}.$((${last_tag##*.}+1))"
 echo "3) Next tag: ${next_tag}";
 
 echo "4) Forcing tag update..."
