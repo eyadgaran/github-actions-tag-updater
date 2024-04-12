@@ -31,7 +31,7 @@ if [ "${INPUT_INCREMENT_BRANCH_TAG}" = true ];then
     branch=$(git rev-parse --abbrev-ref HEAD)
     echo "branch: ${branch}";
 
-    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_TAG_PREFIX}${branch}\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
+    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${branch}-${INPUT_TAG_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
     echo "Last tag: ${last_tag}";
 else
     last_tag=`git describe --tags $(git rev-list --tags --max-count=1)`
@@ -41,14 +41,14 @@ fi
 
 if [ -z "${last_tag}" ];then
     if [ "${INPUT_INCREMENT_BRANCH_TAG}" != false ];then
-        last_tag="${INPUT_TAG_PREFIX}${branch}.1.0";
+        last_tag="${branch}-${INPUT_TAG_PREFIX}0.1.0";
     else
         last_tag="${INPUT_TAG_PREFIX}0.1.0";
     fi
     echo "Default Last tag: ${last_tag}";
 fi
 
-next_tag="${last_tag%.*}.$((${last_tag##*.}+1))"
+next_tag="${last_tag%.*}.$((${last_tag##*.}+1)).0"
 echo "3) Next tag: ${next_tag}";
 
 echo "4) Forcing tag update..."
