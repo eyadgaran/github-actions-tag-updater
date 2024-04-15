@@ -31,9 +31,9 @@ git fetch origin --tags --quiet
 
 # Get last tag
 if [ -n "${INPUT_MATCH_SUFFIX}" ]; then
-    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*${INPUT_SUFFIX}$"|sort -V -r|head -n 1`
+    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "^${INPUT_PREFIX}[0-9]*\.[0-9]*\.[0-9]*${INPUT_SUFFIX}$"|sort -V -r|head -n 1`
 else
-    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
+    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "^${INPUT_PREFIX}[0-9]*\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
 fi
 echo "Last Tag: ${last_tag}";
 
@@ -44,9 +44,17 @@ if [ -z "${last_tag}" ];then
 fi
 
 # Extract major, minor, and patch versions from the last tag
-major_version=$(echo "${last_tag}" | awk -F'.' '{print $1}')
+if [ -n "${INPUT_PREFIX}" ]; then
+    major_version=$(echo "${last_tag}" | awk -F'.' '{print $1}' | sed "s/${INPUT_PREFIX}//")
+else
+    major_version=$(echo "${last_tag}" | awk -F'.' '{print $1}')
+fi
 minor_version=$(echo "${last_tag}" | awk -F'.' '{print $2}')
-patch_version=$(echo "${last_tag}" | awk -F'.' '{print $3}')
+if [ -n "${INPUT_SUFFIX}" ]; then
+    patch_version=$(echo "${last_tag}" | awk -F'.' '{print $3}' | sed "s/${INPUT_SUFFIX}//")
+else
+    patch_version=$(echo "${last_tag}" | awk -F'.' '{print $3}')
+fi
 
 # Increment the version based on the value of INPUT_VERSION
 if [ "${INPUT_VERSION}" = "major" ]; then
