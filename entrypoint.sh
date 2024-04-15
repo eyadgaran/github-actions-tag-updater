@@ -62,7 +62,7 @@ else
 fi
 
 # Construct the next tag
-next_tag="${INPUT_TAG_PREFIX}${next_major_version}.${next_minor_version}.${next_patch_version}"
+next_tag="${INPUT_PREFIX}${next_major_version}.${next_minor_version}.${next_patch_version}"
 
 echo "3) Next Tag: ${next_tag}";
 
