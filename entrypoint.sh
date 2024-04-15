@@ -14,7 +14,8 @@ echo "Version to Increment: ${INPUT_VERSION}"
 echo "Increment Amount: ${INPUT_INCREMENT}"
 echo "Tag Message: ${INPUT_MESSAGE}"
 echo "Tag Prefix: ${INPUT_PREFIX}"
-echo "Tag Prefix: ${INPUT_PREFIX}"
+echo "Tag Suffix: ${INPUT_SUFFIX}"
+echo "Match Suffix: ${INPUT_MATCH_SUFFIX}"
 echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
 echo "GITHUB_TOKEN: ${GITHUB_TOKEN}"
 echo "HOME: ${HOME}"
@@ -29,12 +30,16 @@ echo "2) Updating repository tags..."
 git fetch origin --tags --quiet
 
 # Get last tag
-last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
+if [ -n "${INPUT_MATCH_SUFFIX}" ]; then
+    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*${INPUT_SUFFIX}$"|sort -V -r|head -n 1`
+else
+    last_tag=`git describe --tags $(git rev-list --tags) --always|egrep "${INPUT_PREFIX}\.[0-9]*\.[0-9]*\.[0-9]*$"|sort -V -r|head -n 1`
+fi
 echo "Last Tag: ${last_tag}";
 
 # Default first tag
 if [ -z "${last_tag}" ];then
-    last_tag="${INPUT_PREFIX}0.0.0";
+    last_tag="0.0.0";
     echo "Default First tag: ${last_tag}";
 fi
 
@@ -62,7 +67,7 @@ else
 fi
 
 # Construct the next tag
-next_tag="${INPUT_PREFIX}${next_major_version}.${next_minor_version}.${next_patch_version}"
+next_tag="${INPUT_PREFIX}${next_major_version}.${next_minor_version}.${next_patch_version}${INPUT_SUFFIX}"
 
 echo "3) Next Tag: ${next_tag}";
 

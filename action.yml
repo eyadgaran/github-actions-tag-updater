@@ -18,6 +18,14 @@ inputs:
     description: 'String to be added before the version, for example if this parameter takes the value "v" the final tag will be "v8.0.0".'
     required: false
     default: ''
+  suffix:
+    description: 'String to be added after the version, for example if this parameter takes the value "-rc" the final tag will be "v8.0.0-rc".'
+    required: false
+    default: ''
+  match_suffix:
+    description: 'If set to true, the action will look for the latest tag with the same suffix. Useful to tag pre-releases using the latest release version when set to false'
+    required: false
+    default: 'true'
   version:
     description: 'Which version to increment. Allowed values are "major", "minor", "patch".'
     required: false
