@@ -41,9 +41,9 @@ fi
 
 if [ -z "${last_tag}" ];then
     if [ "${INPUT_INCREMENT_BRANCH_TAG}" != false ];then
-        last_tag="${branch}-${INPUT_TAG_PREFIX}0.1.0";
+        last_tag="${branch}-${INPUT_TAG_PREFIX}0.0.0";
     else
-        last_tag="${INPUT_TAG_PREFIX}0.1.0";
+        last_tag="${INPUT_TAG_PREFIX}0.0.0";
     fi
     echo "Default Last tag: ${last_tag}";
 fi
